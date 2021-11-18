@@ -1,4 +1,5 @@
 # Brassica rapa analysis
+with a SLURM system
 
 ## Run [raxml-ng_v1.0.3](https://github.com/amkozlov/raxml-ng) 
 
