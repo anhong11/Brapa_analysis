@@ -29,5 +29,12 @@ sbatch -n 24 --mem 360G -t 7-00:00 --qos biolong -p Lewis,BioCompute --wrap="rax
 
 ### compute bootstrap support
 raxml-ng --support --tree T?.raxml.bestTree --bs-trees allbootstraps --prefix T?+1 --threads 14 --bs-metric tbe
+```
 
+## Run [SNPhylo](https://github.com/thlee/SNPhylo) to filter SNPs mainly based on LD
+```bash
+module load r/3.6.3
+
+##python /home/hongan/data/biosoft/snphylo/SNPhylo-master/scripts/remove_low_depth_genotype_data.py brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.vcf 5 5 > brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.flt.vcf
+R --slave --vanilla --file=/home/hongan/data/biosoft/snphylo/SNPhylo-master/scripts/generate_snp_sequence.R --args -v brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.flt.vcf -l 0.1 -m 0.1 -M 0.1 -o brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.fltld -a 22 -t 14
 
