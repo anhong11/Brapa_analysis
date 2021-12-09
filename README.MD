@@ -12,9 +12,9 @@ module load gcc
 sh ./install.sh
 
 ### check input file
-sbatch -n 14 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --parse --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.3.fa --model GTR+G --prefix T2"
+sbatch -n 14 --mem 96G -t 2:00:00 -p General,Lewis,BioCompute --wrap="raxml-ng --parse --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.3.fa --model GTR+G --prefix T2"
 
-### run a non-bootstrap tree (optional)
+### run a non-bootstrap tree
 sbatch -n 18 --mem 240G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --msa T2.raxml.rba --model GTR+G --prefix T3 --threads 18 --seed 2 --tree pars{25},rand{25}"
 
 ### run a bootstrap tree
