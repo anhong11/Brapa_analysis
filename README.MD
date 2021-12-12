@@ -15,6 +15,7 @@ Afterthat:
 ## Run [raxml](https://cme.h-its.org/exelixis/web/software/raxml/) if the dataset is not very big
 
 ```bash
+##Run wit ASC_GTRGAMMA model for SNP data
 sbatch -n 24 --mem 196G -t 1-23:00 -p Lewis,BioCompute --wrap="raxml -f a -x 12345 -p 12345 -# 100 -m ASC_GTRGAMMA --asc-corr=lewis -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta -n brapa_outgrp_asc -T 24"
 
 #If invarious sites found in the fasta file:
