@@ -1,6 +1,30 @@
 # Brassica rapa analysis
 with a SLURM system
 
+## Run [SNPhylo](https://github.com/thlee/SNPhylo) to filter SNPs mainly based on LD
+```bash
+
+##make sure the CHR column only contains number: change A01...A10 to 1...10
+module load r/3.6.3
+
+##python /home/hongan/data/biosoft/snphylo/SNPhylo-master/scripts/remove_low_depth_genotype_data.py brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.vcf 5 5 > brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.flt.vcf
+R --slave --vanilla --file=/home/hongan/data/biosoft/snphylo/SNPhylo-master/scripts/generate_snp_sequence.R --args -v brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.flt.vcf -l 0.1 -m 0.1 -M 0.1 -o brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.fltld -a 10 -t 14
+
+## Run
+
+```bash
+sbatch -n 24 --mem 196G -t 1-23:00 -p Lewis,BioCompute --wrap="raxml -f a -x 12345 -p 12345 -# 100 -m ASC_GTRGAMMA --asc-corr=lewis -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta -n brapa_outgrp_asc -T 24"
+
+#If invarious sites found in the fasta file:
+grep '^Site' slurm-xxxxxxx.out > invar_site.txt
+sed -i 's/Site //g' invar_site.txt
+sed -i 's/ //g' invar_site.txt
+
+perl rmInvar4raxml.pl invar_site.txt brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta
+
+sbatch -n 24 --mem 196G -t 1-23:00 -p Lewis,BioCompute --wrap="raxml -f a -x 12345 -p 12345 -# 100 -m ASC_GTRGAMMA --asc-corr=lewis -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta -n brapa_outgrp_asc -T 24"
+```
+
 ## Run [raxml-ng_v1.0.3](https://github.com/amkozlov/raxml-ng) 
 
 ```bash
@@ -30,13 +54,3 @@ sbatch -n 24 --mem 360G -t 7-00:00 --qos biolong -p Lewis,BioCompute --wrap="rax
 ### compute bootstrap support
 raxml-ng --support --tree T?.raxml.bestTree --bs-trees allbootstraps --prefix T?+1 --threads 14 --bs-metric tbe
 ```
-
-## Run [SNPhylo](https://github.com/thlee/SNPhylo) to filter SNPs mainly based on LD
-```bash
-
-##make sure the CHR column only contains number: change A01...A10 to 1...10
-module load r/3.6.3
-
-##python /home/hongan/data/biosoft/snphylo/SNPhylo-master/scripts/remove_low_depth_genotype_data.py brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.vcf 5 5 > brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.flt.vcf
-R --slave --vanilla --file=/home/hongan/data/biosoft/snphylo/SNPhylo-master/scripts/generate_snp_sequence.R --args -v brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.flt.vcf -l 0.1 -m 0.1 -M 0.1 -o brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.fltld -a 10 -t 14
-
