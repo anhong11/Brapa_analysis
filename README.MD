@@ -27,6 +27,13 @@ perl rmInvar4raxml.pl invar_site.txt brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1
 
 sbatch -n 24 --mem 196G -t 1-23:00 -p Lewis,BioCompute --wrap="raxml -f a -x 12345 -p 12345 -# 100 -m ASC_GTRGAMMA --asc-corr=lewis -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta -n brapa_outgrp_asc -T 24"
 ```
+## Run [IQ-TREE2](http://www.iqtree.org/) is another opinion
+```bash
+sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta -m GTR+G+ASC -nt AUTO -ntmax 14 -B 1000 -st DNA"
+
+##if have invariant sites, iqtree will report the error and creat a phylip file that only has variant site. Rerun iqtree with this new phylip file
+sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta.varsites.phy -m GTR+G+ASC -nt AUTO -ntmax 14 -B 1000 -st DNA"
+
 
 ## Run [raxml-ng_v1.0.3](https://github.com/amkozlov/raxml-ng) if the dataset is very big
 
@@ -41,7 +48,7 @@ sh ./install.sh
 ### check input file (do not run this if want to specify your own model)
 sbatch -n 14 --mem 96G -t 2:00:00 -p General,Lewis,BioCompute --wrap="raxml-ng --parse --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.3.fa --model GTR+G --prefix T2"
 
-### if have invariant sites in the alignment, follow the above raxml steps to remove the invariant sites, and write down the number of invariant sites (here we have 1302)
+### if have invariant sites in the alignment, follow the above raxml steps or iqtree step to remove the invariant sites, and write down the number of invariant sites (here we have 1302)
 
 ### run a non-bootstrap tree
 sbatch -n 18 --mem 240G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta --model GTR+G+ASC_FELS{1302} --prefix ASC_T2 --threads 18 --seed 2 --tree pars{50},rand{50}"
