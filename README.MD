@@ -66,3 +66,9 @@ sbatch -n 24 --mem 360G -t 7-00:00 --qos biolong -p Lewis,BioCompute --wrap="rax
 ### compute bootstrap support
 raxml-ng --support --tree T?.raxml.bestTree --bs-trees allbootstraps --prefix T?+1 --threads 14 --bs-metric tbe
 ```
+
+## Other
+### Covert vcf to phylip and fasta with [vcf2phylip](https://github.com/edgardomortiz/vcf2phylip)
+```bash
+sbatch -n 14 --mem 96G -t 12:00:00 -p Lewis,BioCompute --wrap="python3 vcf2phylip.py -i brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf -f"
+```
