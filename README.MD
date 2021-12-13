@@ -38,21 +38,23 @@ module load cmake
 module load gcc
 sh ./install.sh
 
-### check input file
+### check input file (do not run this if want to specify your own model)
 sbatch -n 14 --mem 96G -t 2:00:00 -p General,Lewis,BioCompute --wrap="raxml-ng --parse --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.3.fa --model GTR+G --prefix T2"
 
+### if have invariant sites in the alignment, follow the above raxml steps to remove the invariant sites, and write down the number of invariant sites (here we have 1302)
+
 ### run a non-bootstrap tree
-sbatch -n 18 --mem 240G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --msa T2.raxml.rba --model GTR+G --prefix T3 --threads 18 --seed 2 --tree pars{25},rand{25}"
+sbatch -n 18 --mem 240G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta --model GTR+G+ASC_FELS{1302} --prefix ASC_T2 --threads 18 --seed 2 --tree pars{50},rand{50}"
 
 ### run a bootstrap tree
   ### with default parameters
-sbatch -n 24 --mem 360G -t 7-00:00 --qos biolong -p Lewis,BioCompute --wrap="raxml-ng --bootstrap --msa T2.raxml.rba --model GTR+G --prefix T4 --threads 24 --seed 2"
+sbatch -n 24 --mem 360G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --bootstrap --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta --model GTR+G+ASC_FELS{1302} --prefix ASC_T3 --threads 24 --seed 2"
   ### check bsconverge
-sbatch -n 14 --mem 140G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --bsconverge --bs-trees T4.raxml.bootstraps --prefix T4check --seed 2 --threads 14 --bs-cutoff 0.03"
+sbatch -n 14 --mem 140G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --bsconverge --bs-trees ASC_T3.raxml.bootstraps --prefix ASC_T3check --seed 2 --threads 14 --bs-cutoff 0.03"
   ### if bsconverge is NO, run bootstrap with more bootstraps
-sbatch -n 24 --mem 360G -t 7-00:00 --qos biolong -p Lewis,BioCompute --wrap="raxml-ng --bootstrap --msa T2.raxml.rba --model GTR+G --prefix T5 --threads 24 --seed 333 --bs-trees 800" 
+sbatch -n 24 --mem 360G -t 7-00:00 --qos biolong -p Lewis,BioCompute --wrap="raxml-ng --bootstrap --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta --model GTR+G+ASC_FELS{1302} --prefix ASC_T4 --threads 24 --seed 333 --bs-trees 800" 
  ### check bsconverge again
-  sbatch -n 14 --mem 140G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --bsconverge --bs-trees T4.raxml.bootstraps --prefix T5check --seed 2 --threads 14 --bs-cutoff 0.03"
+  sbatch -n 14 --mem 140G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --bsconverge --bs-trees T4.raxml.bootstraps --prefix ASC_T4check --seed 2 --threads 14 --bs-cutoff 0.03"
 
 ### compute bootstrap support
 raxml-ng --support --tree T?.raxml.bestTree --bs-trees allbootstraps --prefix T?+1 --threads 14 --bs-metric tbe
