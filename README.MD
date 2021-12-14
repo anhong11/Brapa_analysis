@@ -16,7 +16,7 @@ Afterthat:
 
 ```bash
 ##Run wit ASC_GTRGAMMA model for SNP data
-sbatch -n 24 --mem 196G -t 1-23:00 -p Lewis,BioCompute --wrap="raxml -f a -x 12345 -p 12345 -# 100 -m ASC_GTRGAMMA --asc-corr=lewis -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta -n brapa_outgrp_asc -T 24"
+sbatch -n 24 --mem 196G -t 1-23:00 -p Lewis,BioCompute --wrap="raxml -f a -x 12345 -p 12345 -# 100 -m ASC_GTRGAMMA --asc-corr=lewis -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta -o Bo025A,Bo080A -n brapa_outgrp_asc -T 24"
 
 #If invarious sites found in the fasta file, then:
 grep '^Site' slurm-xxxxxxx.out > invar_site.txt
@@ -29,10 +29,10 @@ sbatch -n 24 --mem 196G -t 1-23:00 -p Lewis,BioCompute --wrap="raxml -f a -x 123
 ```
 ## Run [IQ-TREE2](http://www.iqtree.org/) is another opinion
 ```bash
-sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta -m GTR+G+ASC -nt AUTO -ntmax 14 -B 1000 -st DNA"
+sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta -m GTR+G+ASC -o Bo025A,Bo080A -nt AUTO -ntmax 14 -B 1000 -st DNA"
 
 ##if have invariant sites, iqtree will report the error and creat a phylip file that only has variant site. Rerun iqtree with this new phylip file
-sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta.varsites.phy -m GTR+G+ASC -nt AUTO -ntmax 14 -B 1000 -st DNA"
+sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta.varsites.phy -m GTR+G+ASC -o Bo025A,Bo080A -nt AUTO -ntmax 14 -B 1000 -st DNA"
 ```
 
 ## Run [raxml-ng_v1.0.3](https://github.com/amkozlov/raxml-ng) if the dataset is very big
@@ -51,15 +51,15 @@ sbatch -n 14 --mem 96G -t 2:00:00 -p General,Lewis,BioCompute --wrap="raxml-ng -
 ### if have invariant sites in the alignment, follow the above raxml steps or iqtree step to remove the invariant sites, and write down the number of invariant sites (here we have 1302)
 
 ### run a non-bootstrap tree
-sbatch -n 18 --mem 240G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta --model GTR+G+ASC_FELS{1302} --prefix ASC_T2 --threads 18 --seed 2 --tree pars{50},rand{50}"
+sbatch -n 18 --mem 240G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta --model GTR+G+ASC_FELS{1302} --outgroup Bo025A,Bo080A --prefix ASC_T2 --threads 18 --seed 2 --tree pars{50},rand{50}"
 
 ### run a bootstrap tree
   ### with default parameters
-sbatch -n 24 --mem 360G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --bootstrap --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta --model GTR+G+ASC_FELS{1302} --prefix ASC_T3 --threads 24 --seed 2"
+sbatch -n 24 --mem 360G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --bootstrap --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta --model GTR+G+ASC_FELS{1302} --outgroup Bo025A,Bo080A --prefix ASC_T3 --threads 24 --seed 2"
   ### check bsconverge
 sbatch -n 14 --mem 140G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --bsconverge --bs-trees ASC_T3.raxml.bootstraps --prefix ASC_T3check --seed 2 --threads 14 --bs-cutoff 0.03"
   ### if bsconverge is NO, run bootstrap with more bootstraps
-sbatch -n 24 --mem 360G -t 7-00:00 --qos biolong -p Lewis,BioCompute --wrap="raxml-ng --bootstrap --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta --model GTR+G+ASC_FELS{1302} --prefix ASC_T4 --threads 24 --seed 333 --bs-trees 800" 
+sbatch -n 24 --mem 360G -t 7-00:00 --qos biolong -p Lewis,BioCompute --wrap="raxml-ng --bootstrap --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta --model GTR+G+ASC_FELS{1302} --outgroup Bo025A,Bo080A --prefix ASC_T4 --threads 24 --seed 333 --bs-trees 800" 
  ### check bsconverge again
   sbatch -n 14 --mem 140G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --bsconverge --bs-trees T4.raxml.bootstraps --prefix ASC_T4check --seed 2 --threads 14 --bs-cutoff 0.03"
 
