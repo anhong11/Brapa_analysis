@@ -11,7 +11,7 @@ sed -i 's/^A//g' brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf brapa_
 module load r/3.6.3
 
 ##python /home/hongan/data/biosoft/snphylo/SNPhylo-master/scripts/remove_low_depth_genotype_data.py brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.vcf 5 5 > brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.no4298.g0.1m0.05.SNP.flt.vcf
-R --slave --vanilla --file=/home/hongan/data/biosoft/snphylo/SNPhylo-master/scripts/generate_snp_sequence.R --args -v brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.rename.vcf -l 0.1 -m 0.05 -M 0.1 -o brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo -a 10 -t 14
+R --slave --vanilla --file=/home/hongan/data/biosoft/snphylo/SNPhylo-master/scripts/generate_snp_sequence.R --args -v brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.rename.vcf -l 0.5 -m 0.05 -M 0.1 -o brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo -a 10 -t 14
 
 ```
 Afterthat:
@@ -54,7 +54,7 @@ sbatch -n 14 --mem 96G -t 2:00:00 -p General,Lewis,BioCompute --wrap="raxml-ng -
 ### if have invariant sites in the alignment, follow the above raxml steps or iqtree step to remove the invariant sites, and write down the number of invariant sites (here we have 1302)
 
 ### run a non-bootstrap tree
-sbatch -n 18 --mem 240G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta --model GTR+G+ASC_FELS{1302} --outgroup Bo025A,Bo080A --prefix ASC_T2 --threads 18 --seed 2 --tree pars{50},rand{50}"
+sbatch -n 18 --mem 240G -t 2-00:00 -p Lewis,BioCompute --wrap="raxml-ng --msa brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta --model GTR+G+ASC_FELS{1302} --outgroup Bo025A,Bo080A --prefix ASC_T2 --threads 18 --seed 2 --tree pars{25},rand{25}"
 
 ### run a bootstrap tree
   ### with default parameters
