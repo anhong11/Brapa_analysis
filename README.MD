@@ -17,9 +17,7 @@ R --slave --vanilla --file=/home/hongan/data/biosoft/snphylo/SNPhylo-master/scri
 Afterthat:
 ## Run [IQ-TREE2](http://www.iqtree.org/)
 ```bash
-
-source ~/virtual_python3.6/bin/activate
-python vcf2phylip.py -i brapa_outgrpAll_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf --output-prefix brapa_outgrpAll_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp
+sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="python vcf2phylip.py -i brapa_outgrpAll_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf --output-prefix brapa_outgrpAll_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp"
 
 sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta -m GTR+G+ASC -o Bo025A,Bo080A -nt AUTO -ntmax 14 -B 1000 -st DNA"
 
