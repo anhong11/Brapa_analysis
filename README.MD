@@ -15,6 +15,17 @@ R --slave --vanilla --file=/home/hongan/data/biosoft/snphylo/SNPhylo-master/scri
 
 ```
 Afterthat:
+## Run [IQ-TREE2](http://www.iqtree.org/)
+```bash
+
+source ~/virtual_python3.6/bin/activate
+python vcf2phylip.py -i brapa_outgrpAll_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf --output-prefix brapa_outgrpAll_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp
+
+sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta -m GTR+G+ASC -o Bo025A,Bo080A -nt AUTO -ntmax 14 -B 1000 -st DNA"
+
+##if have invariant sites, iqtree will report the error and creat a phylip file that only has variant site. Rerun iqtree with this new phylip file
+sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta.varsites.phy -m GTR+G+ASC -o Bo025A,Bo080A -nt AUTO -ntmax 14 -B 1000 -st DNA"
+```
 ## Run [raxml](https://cme.h-its.org/exelixis/web/software/raxml/) if the dataset is not very big
 
 ```bash
@@ -30,13 +41,7 @@ perl rmInvar4raxml.pl invar_site.txt brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1
 
 sbatch -n 24 --mem 196G -t 1-23:00 -p Lewis,BioCompute --wrap="raxml -f a -x 12345 -p 12345 -# 100 -m ASC_GTRGAMMA --asc-corr=lewis -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.var.fasta -n brapa_outgrp_asc -T 24"
 ```
-## Run [IQ-TREE2](http://www.iqtree.org/) is another opinion
-```bash
-sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta -m GTR+G+ASC -o Bo025A,Bo080A -nt AUTO -ntmax 14 -B 1000 -st DNA"
 
-##if have invariant sites, iqtree will report the error and creat a phylip file that only has variant site. Rerun iqtree with this new phylip file
-sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta.varsites.phy -m GTR+G+ASC -o Bo025A,Bo080A -nt AUTO -ntmax 14 -B 1000 -st DNA"
-```
 
 ## Run [raxml-ng_v1.0.3](https://github.com/amkozlov/raxml-ng) if the dataset is very big
 
