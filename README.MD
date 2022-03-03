@@ -1,4 +1,4 @@
-# Brassica rapa analysis
+# Brassica rapa phylogeny
 with a SLURM system
 
 ## Run [SNPhylo](https://github.com/thlee/SNPhylo) to filter SNPs mainly based on LD
