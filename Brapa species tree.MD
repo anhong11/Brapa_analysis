@@ -12,7 +12,7 @@ sbatch -n 14 --mem 96G -t 1-00:00 -p Lewis,BioCompute --wrap="java -Xmx96G -jar 
 
 perl rename_fa4iqtree.pl used_outgrp.flt.snp.fa used_outgrp_pop.txt used_outgrp.flt.snp.pop.fa
 
-sed -i 's/\?/N/g' used_outgrp.flt.snp.pop.fa ##optional
+sed -i 's/\?/N/g' used_outgrp.flt.snp.pop.fa    ## optional
 
 gzip used_outgrp.flt.snp.pop.fa
 
