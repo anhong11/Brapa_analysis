@@ -17,7 +17,7 @@ sed -i 's/\?/N/g' used_outgrp.flt.snp.pop.fa    ## optional
 gzip used_outgrp.flt.snp.pop.fa
 
 source ~/virtual_python3.6/bin/activate
-python FastaToCounts.py used_outgrp.flt.snp.pop.fa.gz used_outgrp.flt.snp.pop.cf.gz
+sbatch -n 14 --mem 96G -t 1-00:00 -p Lewis,BioCompute --wrap="python FastaToCounts.py used_outgrp.flt.snp.pop.fa.gz used_outgrp.flt.snp.pop.cf.gz"
 
 gunzip used_outgrp.flt.snp.pop.cf.gz
 ```
