@@ -21,7 +21,7 @@ sbatch -n 14 --mem 96G -t 1-00:00 -p Lewis,BioCompute --wrap="python FastaToCoun
 
 gunzip used_outgrp.flt.snp.pop.cf.gz
 ```
-## Run IQ-Tree with POMO and utralfast bootstrap
+## Run IQ-Tree with PoMo and utralfast bootstrap
 ```
 
 ```
