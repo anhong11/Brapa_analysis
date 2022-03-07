@@ -32,3 +32,14 @@ sbatch -n 14 --mem 96G -t 2:00:00 -p General,Lewis,BioCompute --wrap="vcftools -
 sbatch -n 14 --mem 96G -t 2:00:00 -p General,Lewis,BioCompute --wrap="vcftools --vcf ../brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf --fst-window-size 100000 --fst-window-step 25000 --out wild_rapini --weir-fst-pop wild.txt --weir-fst-pop rapini.txt"
 sbatch -n 14 --mem 96G -t 2:00:00 -p General,Lewis,BioCompute --wrap="vcftools --vcf ../brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf --fst-window-size 100000 --fst-window-step 25000 --out wild_yellow --weir-fst-pop wild.txt --weir-fst-pop yellow.txt"
 ```
+
+## PCA plot
+1. extract vcf file of used samples from all-sample vcf file with [vcftools](http://vcftools.sourceforge.net/)
+```
+sbatch -n 14 --mem 96G -t 1-00:00 -p Lewis,BioCompute --wrap="vcftools --vcf brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf --keep used_only.txt --recode --out used_only.flt.snp"
+```
+2. covert vcf to plink format, and then covert plink format to evec format for [Geneesis](https://github.com/shaze/genesis)
+```
+sbatch -n 14 --mem 96G -t 1-00:00 -p Lewis,BioCompute --wrap="vcftools --vcf used_only.flt.snp.vcf --plink --out used_only.flt.snp.plink"
+
+```
