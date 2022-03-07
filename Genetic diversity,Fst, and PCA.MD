@@ -38,8 +38,15 @@ sbatch -n 14 --mem 96G -t 2:00:00 -p General,Lewis,BioCompute --wrap="vcftools -
 ```
 sbatch -n 14 --mem 96G -t 1-00:00 -p Lewis,BioCompute --wrap="vcftools --vcf brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf --keep used_only.txt --recode --out used_only.flt.snp"
 ```
-2. covert vcf to plink format, and then covert plink format to evec format for [Geneesis](https://github.com/shaze/genesis)
+2. covert vcf to plink format, and then covert plink format to evec format for [Genesis](https://github.com/shaze/genesis)
 ```
 sbatch -n 14 --mem 96G -t 1-00:00 -p Lewis,BioCompute --wrap="vcftools --vcf used_only.flt.snp.vcf --plink --out used_only.flt.snp.plink"
+
+sed -i 's/0\t\(A[0-1][0-9]\)/\1\t\1/g' used_only.flt.snp.plink.map
+
+plink --file used_only.flt.snp.plink --make-bed --out used_only.flt.snp.bed --noweb --allow-extra-chr
+plink --bfile used_only.flt.snp.bed --pca --out used_only.flt.snp.bed --allow-extra-chr
+
+python plink2evec.py --bfile used_only.flt.snp.bed --out used_only.flt.snp.pca.evec   ##plink2evec.py is in Genesis package
 
 ```
