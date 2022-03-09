@@ -23,5 +23,5 @@ gunzip used_outgrp.flt.snp.pop.cf.gz
 ```
 ## Run IQ-Tree with PoMo and utralfast bootstrap
 ```
-sbatch -n 14 --mem 196G --qos biolong -t 7-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s used_outgrp.flt.snp.pop.cf -m GTR+P -nt AUTO -ntmax 14 -bb 1000"
+sbatch -n 14 --mem 450G --qos biolong -t 7-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s used_outgrp.flt.snp.pop.cf -m GTR+P -nt AUTO -ntmax 14 -bb 1000"
 ```
