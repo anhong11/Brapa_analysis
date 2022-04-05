@@ -1,5 +1,21 @@
 # B. rapa selective sweep analysis
 
+with cross population methods:
+[selscan](https://github.com/szpiech/selscan): XP-nSL or XP-EHH
+[XPCLR](https://github.com/hardingnj/xpclr)
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Install [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
 1. install RAiSD
 ```
