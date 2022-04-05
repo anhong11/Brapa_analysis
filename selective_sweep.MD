@@ -1,8 +1,8 @@
 # B. rapa selective sweep analysis
 
-with cross population methods:
-[selscan](https://github.com/szpiech/selscan): XP-nSL or XP-EHH
-[XPCLR](https://github.com/hardingnj/xpclr)
+with cross population methods:   
+[selscan](https://github.com/szpiech/selscan): XP-nSL or XP-EHH   
+[XPCLR](https://github.com/hardingnj/xpclr)    
 
 
 
