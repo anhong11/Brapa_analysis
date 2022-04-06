@@ -22,7 +22,7 @@ and match brown.txt, ca_tn.txt ... files which contain accession id
 
 ```
 
-## Use [XPCLR](https://github.com/hardingnj/xpclr)    
+## Use [xpclr](https://github.com/hardingnj/xpclr)    
 
 
 
