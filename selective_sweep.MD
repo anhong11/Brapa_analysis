@@ -1,5 +1,16 @@
 # B. rapa selective sweep analysis
 
+## Phase SNPs with [Beagle](https://faculty.washington.edu/browning/beagle/beagle.html#download)
+### Search and download the published genetic map, reformat it and manually check the genetic map is in an increasing order:
+```
+A01bin001	0	400000	0.00	1.37
+A01bin002	400000	700000	1.37	2.02
+A01bin003	700000	900000	2.02	2.70
+...
+A01bin088	29200000	29500000	106.84
+```
+
+
 with cross population methods   
 
 ## Use [selscan](https://github.com/szpiech/selscan): XP-nSL or XP-EHH   
