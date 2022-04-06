@@ -1,7 +1,8 @@
 # B. rapa selective sweep analysis
 
 ## Phase SNPs with [Beagle](https://faculty.washington.edu/browning/beagle/beagle.html#download)
-### Search and download the published genetic map, reformat it and manually check the genetic map is in an increasing order:
+### Search and download the published genetic map, reformat it and manually check the genetic map is in an increasing order
+the format is: marker physical_start physical_end genetic_start genetic_end:
 ```
 A01bin001	0	400000	0.00	1.37
 A01bin002	400000	700000	1.37	2.02
