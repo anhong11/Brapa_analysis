@@ -1,8 +1,28 @@
 # B. rapa selective sweep analysis
 
-with cross population methods:   
-[selscan](https://github.com/szpiech/selscan): XP-nSL or XP-EHH   
-[XPCLR](https://github.com/hardingnj/xpclr)    
+with cross population methods   
+
+## Use [selscan](https://github.com/szpiech/selscan): XP-nSL or XP-EHH   
+### Extract vcf file for each group
+```
+sbatch -n 1 --mem 8G -t 2:00:00 --wrap="sh extract_vcf.sh group.file"
+```
+group.file looks like:
+```
+brown
+ca_tn
+ch_oil
+euro_tn
+...
+```
+and match brown.txt, ca_tn.txt ... files which contain accession id
+
+### Run selscan
+```
+
+```
+
+## Use [XPCLR](https://github.com/hardingnj/xpclr)    
 
 
 
@@ -16,7 +36,7 @@ with cross population methods:
 
 
 
-## Install [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
+## Two new software: [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
 1. install RAiSD
 ```
 wget https://github.com/alachins/raisd/archive/master.zip
