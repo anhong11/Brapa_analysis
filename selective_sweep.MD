@@ -23,6 +23,12 @@ perl get_snp_cm_beagle.pl bra_merged_cM_snp_sort.txt bra_only_beagle.map
 ```
 sbatch -n 12 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="java -Xmx90G -jar beagle.25Mar22.4f6.jar gt=brapa_onlySRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf out=bra_only_phased map=bra_only_beagle.map nthreads=12"
 ``` 
+### 4. Split phased vcf in each chr
+```
+head -n 9 bra_only_phased.vcf > bra_only_phased.head
+
+sbatch -n 1 --mem 16G --wrap="sh extract_chr_vcf.sh chr.name"   ## chr.name: A01...A10, each chr in one line
+```
 
 ## Use cross population methods [selscan](https://github.com/szpiech/selscan)(XP-nSL or XP-EHH) and [xpclr](https://github.com/hardingnj/xpclr) detect selective sweep 
 ### Extract vcf file for each group
