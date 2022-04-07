@@ -30,7 +30,7 @@ head -n 9 bra_only_phased.vcf > bra_only_phased.head
 sbatch -n 1 --mem 16G --wrap="sh extract_chr_vcf.sh chr.name"   ## chr.name: A01...A10, each chr in one line
 ```
 
-## Use cross population methods [selscan](https://github.com/szpiech/selscan)(XP-nSL or XP-EHH) and [xpclr](https://github.com/hardingnj/xpclr) detect selective sweep 
+## Use cross population methods [selscan](https://github.com/szpiech/selscan)(XP-nSL) and [xpclr](https://github.com/hardingnj/xpclr) detect selective sweep 
 ### Extract vcf file for each group
 ```
 sbatch -n 1 --mem 8G -t 2:00:00 --wrap="perl extract_vcf.pl chr.name group.file"
