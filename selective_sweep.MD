@@ -33,7 +33,7 @@ sbatch -n 1 --mem 16G --wrap="sh extract_chr_vcf.sh chr.name"   ## chr.name: A01
 ## Use cross population methods [selscan](https://github.com/szpiech/selscan)(XP-nSL or XP-EHH) and [xpclr](https://github.com/hardingnj/xpclr) detect selective sweep 
 ### Extract vcf file for each group
 ```
-sbatch -n 1 --mem 8G -t 2:00:00 --wrap="sh extract_vcf.sh group.file"
+sbatch -n 1 --mem 8G -t 2:00:00 --wrap="perl extract_vcf.pl chr.name group.file"
 ```
 group.file looks like:
 ```
@@ -45,9 +45,16 @@ euro_tn
 ```
 and match brown.txt, ca_tn.txt ... files which contain accession id
 
-### Run selscan
+### Run selscan (need to run for each chr)
 ```
-sbatch -n 14 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="selscan --xpnsl --vcf vcf_group/napa.vcf --vcf-ref vcf_group/wild.vcf --out napa_wild --threads 14"
+sbatch -n 14 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="sh xpnsl_napa.sh ../chr.name"
+
+## And the xpnsl_napa.sh:
+while read line
+do
+	selscan --xpnsl --vcf ../vcf_group/napa_"$line".vcf --vcf-ref ../vcf_group/wild_"$line".vcf --out napa_wild_$line --threads 14
+done<$1
+
 ```
 
 ## Two new software: [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
