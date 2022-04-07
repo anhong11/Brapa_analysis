@@ -49,6 +49,10 @@ and match brown.txt, ca_tn.txt ... files which contain accession id
 ```
 sbatch -n 14 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="sh xpnsl_napa.sh ../chr.name"
 
+norm --xpnsl --files napa_wild_A01.xpnsl.out napa_wild_A02.xpnsl.out napa_wild_A03.xpnsl.out napa_wild_A04.xpnsl.out napa_wild_A05.xpnsl.out napa_wild_A06.xpnsl.out napa_wild_A07.xpnsl.out napa_wild_A08.xpnsl.out napa_wild_A09.xpnsl.out napa_wild_A10.xpnsl.out
+
+norm --xpnsl --files napa_wild_A01.xpnsl.out napa_wild_A02.xpnsl.out napa_wild_A03.xpnsl.out napa_wild_A04.xpnsl.out napa_wild_A05.xpnsl.out napa_wild_A06.xpnsl.out napa_wild_A07.xpnsl.out napa_wild_A08.xpnsl.out napa_wild_A09.xpnsl.out napa_wild_A10.xpnsl.out --bp-win
+
 ## And the xpnsl_napa.sh:
 while read line
 do
