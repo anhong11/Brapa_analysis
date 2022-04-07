@@ -1,7 +1,7 @@
 # B. rapa selective sweep analysis
 
 ## Phase SNPs with [Beagle](https://faculty.washington.edu/browning/beagle/beagle.html#download)
-### Search and download the published genetic map, reformat it and manually check the genetic map is in an increasing order
+### 1. Search and download the published genetic map, reformat it and manually check the genetic map is in an increasing order
 the file is _bra_cM.txt_, format is: marker mean_physical_this_marker mean_physical_next_marker genetic_this_marker genetic_next_marker
 ```
 A01start  A01 1 200000  0.00  0.00 ##add this line for each chr manually
@@ -11,19 +11,20 @@ A01bin003	A01 800000	1000000	2.02	2.70
 ...
 A01bin088	A01 29350000		106.84	
 ```
+### 2. Prepare cM added map file for Beagle
 ```
 grep '^A' brapa_onlySRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf | awk '{print $3"\t"$1"\t"$2}' - > brapa_onlySRA_snp_pos.txt
 cat bra_cM.txt brapa_onlySRA_snp_pos.txt > bra_merged_cM_snp.txt
 sort -k2,2 -k3,3n bra_merged_cM_snp.txt > bra_merged_cM_snp_sort.txt
 
 perl get_snp_cm_beagle.pl bra_merged_cM_snp_sort.txt bra_only_beagle.map
-
-sbatch -n 12 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="java -Xmx90G -jar beagle.25Mar22.4f6.jar gt=brapa_onlySRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf out=bra_only_phased map=bra_only_beagle.map nthreads=12"
-
 ```
-with cross population methods   
+### 3. Run Beagle 
+```
+sbatch -n 12 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="java -Xmx90G -jar beagle.25Mar22.4f6.jar gt=brapa_onlySRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf out=bra_only_phased map=bra_only_beagle.map nthreads=12"
+``` 
 
-## Use [selscan](https://github.com/szpiech/selscan): XP-nSL or XP-EHH   
+## Use cross population methods [selscan](https://github.com/szpiech/selscan)(XP-nSL or XP-EHH) and [xpclr](https://github.com/hardingnj/xpclr) detect selective sweep 
 ### Extract vcf file for each group
 ```
 sbatch -n 1 --mem 8G -t 2:00:00 --wrap="sh extract_vcf.sh group.file"
@@ -40,22 +41,8 @@ and match brown.txt, ca_tn.txt ... files which contain accession id
 
 ### Run selscan
 ```
-
+sbatch -n 14 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="selscan --xpnsl --vcf vcf_group/napa.vcf --vcf-ref vcf_group/wild.vcf --out napa_wild --threads 14"
 ```
-
-## Use [xpclr](https://github.com/hardingnj/xpclr)    
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Two new software: [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
 1. install RAiSD
