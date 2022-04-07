@@ -16,6 +16,7 @@ grep '^A' brapa_onlySRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf | awk '{print $
 cat bra_cM.txt brapa_onlySRA_snp_pos.txt > bra_merged_cM_snp.txt
 sort -k2,2 -k3,3n bra_merged_cM_snp.txt > bra_merged_cM_snp_sort.txt
 perl get_snp_cm_beagle.pl bra_merged_cM_snp_sort.txt bra_only_beagle.map
+```
 with cross population methods   
 
 ## Use [selscan](https://github.com/szpiech/selscan): XP-nSL or XP-EHH   
