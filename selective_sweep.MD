@@ -2,16 +2,20 @@
 
 ## Phase SNPs with [Beagle](https://faculty.washington.edu/browning/beagle/beagle.html#download)
 ### Search and download the published genetic map, reformat it and manually check the genetic map is in an increasing order
-the format is: marker physical_start physical_end genetic_start genetic_end:
+the file is _bra_cM.txt_, format is: marker mean_physical_this_marker mean_physical_next_marker genetic_this_marker genetic_next_marker
 ```
-A01bin001	0	400000	0.00	1.37
-A01bin002	400000	700000	1.37	2.02
-A01bin003	700000	900000	2.02	2.70
+A01start  A01 1 200000  0.00  0.00 ##add this line for each chr manually
+A01bin001	A01 200000	550000	0.00	1.37
+A01bin002	A01 550000	800000	1.37	2.02
+A01bin003	A01 800000	1000000	2.02	2.70
 ...
-A01bin088	29200000	29500000	106.84
+A01bin088	A01 29350000		106.84	
 ```
-
-
+```
+grep '^A' brapa_onlySRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf | awk '{print $3"\t"$1"\t"$2}' - > brapa_onlySRA_snp_pos.txt
+cat bra_cM.txt brapa_onlySRA_snp_pos.txt > bra_merged_cM_snp.txt
+sort -k2,2 -k3,3n bra_merged_cM_snp.txt > bra_merged_cM_snp_sort.txt
+perl get_snp_cm_beagle.pl bra_merged_cM_snp_sort.txt bra_only_beagle.map
 with cross population methods   
 
 ## Use [selscan](https://github.com/szpiech/selscan): XP-nSL or XP-EHH   
