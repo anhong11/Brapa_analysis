@@ -23,15 +23,17 @@ perl get_snp_cm_beagle.pl bra_merged_cM_snp_sort.txt bra_only_beagle.map
 ```
 sbatch -n 12 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="java -Xmx90G -jar beagle.25Mar22.4f6.jar gt=brapa_onlySRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf out=bra_only_phased map=bra_only_beagle.map nthreads=12"
 ``` 
-### 4. Split phased vcf in each chr
+
+## Use cross population methods [selscan](https://github.com/szpiech/selscan)(XP-nSL) and [xpclr](https://github.com/hardingnj/xpclr) detect selective sweep 
+
+### Run selscan (need to run for each chr)
+#### 1. Split phased vcf in each chr
 ```
 head -n 9 bra_only_phased.vcf > bra_only_phased.head
 
 sbatch -n 1 --mem 16G --wrap="sh extract_chr_vcf.sh chr.name"   ## chr.name: A01...A10, each chr in one line
 ```
-
-## Use cross population methods [selscan](https://github.com/szpiech/selscan)(XP-nSL) and [xpclr](https://github.com/hardingnj/xpclr) detect selective sweep 
-### Extract vcf file for each group
+#### 2. Extract vcf file for each group
 ```
 sbatch -n 1 --mem 8G -t 2:00:00 --wrap="perl extract_vcf.pl chr.name group.file"
 ```
@@ -44,8 +46,7 @@ euro_tn
 ...
 ```
 and match brown.txt, ca_tn.txt ... files which contain accession id
-
-### Run selscan (need to run for each chr)
+#### 3. Run xpnsl and norm xpnsl results in selscan
 ```
 sbatch -n 14 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="sh xpnsl_napa.sh ../chr.name"
 
@@ -60,6 +61,7 @@ do
 done<$1
 
 ```
+
 ### Run xpclr (need to run for each chr)
 ```
 sbatch -n 12 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="sh xpclr_napa.sh ../chr.name"
