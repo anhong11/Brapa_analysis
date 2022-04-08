@@ -63,6 +63,28 @@ done<$1
 ```
 
 ### Run xpclr (need to run for each chr)
+#### 1. add gen_dist to INFO of vcf file
+```
+grep "^#" bra_only_phased.vcf > bra_only_phased.head
+grep "^A" bra_only_phased.vcf > bra_only_phased.body
+
+awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7}' bra_only_phased.body > fake_vcf.txt
+awk '{print $3}' beagle_phase/bra_only_beagle.map > gen_dist.txt
+sed -i 's/^/gen_dist=/g' gen_dist.txt
+
+paste fake_vcf.txt gen_dist.txt > fake_vcf_gendist.txt
+sed -i 's/$/\tGT\t0|0/g' fake_vcf_gendist.txt
+
+# modify bra_only_phased.head, only keep one sample in #CHR line, and save as fake_gendist.head
+cat fake_gendist.head fake_vcf_gendist.txt > fake_gendist.vcf
+
+#Transfere INFO from fake vcf to bra_only_phased.vcf
+
+bcftools view fake_gendist.vcf -o fake_gendist.bcf
+bcftools view bra_only_phased.vcf -o bra_only_phased_gendist.bcf
+
+bcftools annotate -a fake_gendist.bcf -c INFO bra_only_phased_gendist.bcf
+```
 ```
 sbatch -n 12 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="sh xpclr_napa.sh ../chr.name"
 
