@@ -80,11 +80,14 @@ cat fake_gendist.head fake_vcf_gendist.txt > fake_gendist.vcf
 
 #Transfere INFO from fake vcf to bra_only_phased.vcf
 
-bcftools view fake_gendist.vcf -o fake_gendist.bcf
-bcftools view bra_only_phased.vcf -o bra_only_phased_gendist.bcf
+bcftools view -O b fake_gendist.vcf -o fake_gendist.bcf
+bcftools view -O b bra_only_phased.vcf -o bra_only_phased.bcf
+bcftools index fake_gendist.bcf 
+bcftools index bra_only_phased.bcf
 
-bcftools annotate -a fake_gendist.bcf -c INFO bra_only_phased_gendist.bcf
+bcftools annotate -a fake_gendist.bcf -c INFO bra_only_phased.bcf > bra_only_phased_gendist.vcf
 ```
+#### 2. run xpclr
 ```
 sbatch -n 12 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="sh xpclr_napa.sh ../chr.name"
 
