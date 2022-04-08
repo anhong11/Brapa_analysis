@@ -71,7 +71,7 @@ and the xpclr_napa.sh:
 ```
 while read line
 do
-	xpclr -Sa ../napa.txt -Sb ../wild.xtx -C $line -I ../bra_only_phased.vcf -O napa_wild_"$line".txt
+	xpclr -Sa ../napa.txt -Sb ../wild.txt -C $line -I ../bra_only_phased.vcf -O napa_wild_"$line".txt
 done<$1
 ```
 
