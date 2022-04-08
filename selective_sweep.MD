@@ -60,6 +60,18 @@ do
 done<$1
 
 ```
+### Run xpclr (need to run for each chr)
+```
+sbatch -n 12 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="sh xpclr_napa.sh ../chr.name"
+
+```
+and the xpclr_napa.sh:
+```
+while read line
+do
+	xpclr -Sa ../napa.txt -Sb ../wild.xtx -C $line -I ../bra_only_phased.vcf -O napa_wild_"$line".txt
+done<$1
+```
 
 ## Two new software: [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
 1. install RAiSD
