@@ -104,7 +104,7 @@ done<$1
 ```
 grep '^A' bra_only_phased_gendist.vcf > bra_only_phased_gendist.body
 awk '{print $3"\t"$1"\t"$8"\t"$2"\t"$4"\t"$5}' bra_only_phased_gendist.body > bra_only_snp_cM_xpclr.map
-
+sed -i 's/gen_dist=//g' bra_only_snp_cM_xpclr.map
 ```
 ## Two new software: [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
 1. install RAiSD
