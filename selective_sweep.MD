@@ -62,7 +62,11 @@ do
 done<$1
 
 ```
-
+Tips: head for norm --bp-win output is:
+```
+<win start> <win end> <# scores in win> <frac scores gt threshold> <frac scores lt threshold> <approx percentile for gt threshold wins> <approx percentile for lt threshold wins> <max score> <min score>
+```
+and <frac scores gt threshold> means "the fraction of XP-nSL scores >2"
 ### Run xpclr (need to run for each chr)
 #### 1. add gen_dist to INFO of vcf file
 ```
