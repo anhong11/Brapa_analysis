@@ -72,7 +72,7 @@ and <frac scores gt threshold> means "the fraction of XP-nSL scores >2"
 ```
 conda install xpclr -c bioconda
 ```
-#### 2. add gen_dist to INFO of vcf file
+#### 2. add gen_dist to QUAL of vcf file
 ```
 grep "^#" bra_only_phased.vcf > bra_only_phased.head
 grep "^A" bra_only_phased.vcf > bra_only_phased.body
@@ -126,7 +126,9 @@ do
 done<$1
 
 ```
-Tips: Use the modified _util.py_ in this scripts folder to replace the original util.py in the xpclr package xpclr folder
+Tips: Use the modified _util.py_ in this scripts folder to replace the original _util.py_ in the xpclr package xpclr folder
+
+#### prepare .map file (not used in the analysis)
 ```
 grep '^A' bra_only_phased_gendist.vcf > bra_only_phased_gendist.body
 awk '{print $3"\t"$1"\t"$8"\t"$2"\t"$4"\t"$5}' bra_only_phased_gendist.body > bra_only_snp_cM_xpclr.map
