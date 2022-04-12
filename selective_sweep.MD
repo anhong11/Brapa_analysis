@@ -114,7 +114,7 @@ sbatch -n 1 --mem 16G -t 2:00:00 --wrap="sed -i 's/\.\t\PASS\t\([0-9]\+\)\t/\1\t
 ```
 #### 3. run xpclr
 ```
-sbatch -n 12 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="sh xpclr_napa.sh ../chr.name"
+sbatch -n 12 --mem 96G -t 12:00:00 -p Lewis,BioCompute --wrap="sh xpclr_napa.sh ../chr.name"
 
 ```
 and the xpclr_napa.sh:
