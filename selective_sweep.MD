@@ -62,25 +62,40 @@ do
 done<$1
 
 ```
-Tips: head for norm --bp-win output is:
+Tips: header for norm --bp-win output is:
 ```
 <win start> <win end> <# scores in win> <frac scores gt threshold> <frac scores lt threshold> <approx percentile for gt threshold wins> <approx percentile for lt threshold wins> <max score> <min score>
 ```
 and <frac scores gt threshold> means "the fraction of XP-nSL scores >2"
 ### Run xpclr (need to run for each chr)
-#### 1. add gen_dist to INFO of vcf file
+#### 1. install xpclr via conda
+```
+conda install xpclr -c bioconda
+```
+#### 2. add gen_dist to INFO of vcf file
 ```
 grep "^#" bra_only_phased.vcf > bra_only_phased.head
 grep "^A" bra_only_phased.vcf > bra_only_phased.body
 
 awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7}' bra_only_phased.body > fake_vcf.txt
 awk '{print $3}' beagle_phase/bra_only_beagle.map > gen_dist.txt
-sed -i 's/^/gen_dist=/g' gen_dist.txt
 
 paste fake_vcf.txt gen_dist.txt > fake_vcf_gendist.txt
 sed -i 's/$/\tGT\t0|0/g' fake_vcf_gendist.txt
 
-# modify bra_only_phased.head, only keep one sample in #CHR line, and save as fake_gendist.head
+# Add chr infomation and modify bra_only_phased.head, only keep one sample in #CHR line, and save as fake_gendist.head
+#chr info:
+	#contig=<ID=A01,length=29595527>
+	##contig=<ID=A02,length=31442979>
+	##contig=<ID=A03,length=38154160>
+	##contig=<ID=A04,length=21928416>
+	##contig=<ID=A05,length=28493056>
+	##contig=<ID=A06,length=29167992>
+	##contig=<ID=A07,length=28928902>
+	##contig=<ID=A08,length=22981702>
+	##contig=<ID=A09,length=45156810>
+	##contig=<ID=A10,length=20725698>
+
 cat fake_gendist.head fake_vcf_gendist.txt > fake_gendist.vcf
 
 #Transfere INFO from fake vcf to bra_only_phased.vcf
@@ -91,8 +106,13 @@ bcftools index fake_gendist.bcf
 bcftools index bra_only_phased.bcf
 
 bcftools annotate -a fake_gendist.bcf -c INFO bra_only_phased.bcf > bra_only_phased_gendist.vcf
+
+# Transfere cM from INFO to QUAL column:
+sbatch -n 1 --mem 16G -t 2:00:00 --wrap=" sed -i 's/\.\t\PASS\t\([0-9]\+\.[0-9]\+\)\t/\1\t\PASS\t.\t/g' bra_only_phased_gendist.vcf"
+sbatch -n 1 --mem 16G -t 2:00:00 --wrap="sed -i 's/\.\t\PASS\t\([0-9]\+\)\t/\1\t\PASS\t.\t/g' bra_only_phased_gendist.vcf"
+
 ```
-#### 2. run xpclr
+#### 3. run xpclr
 ```
 sbatch -n 12 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="sh xpclr_napa.sh ../chr.name"
 
@@ -101,10 +121,12 @@ and the xpclr_napa.sh:
 ```
 while read line
 do
-	xpclr -Sa ../napa.txt -Sb ../wild.txt -C $line -I ../bra_only_phased.vcf -O napa_wild_"$line".txt --phased
+	xpclr -Sa ../napa.txt -Sb ../wild.txt -C $line -I ../bra_only_phased_gendist2.vcf -O ~/napa_wild_"$line".txt --phased --gdistkey QUAL
+	mv ~/napa_wild_"$line".txt /home/hongan/htc/hongan_htc/bra_resequence/ten_cover/3_selective/xpclr/ 
 done<$1
-```
 
+```
+Tips: Use the modified _util.py_ in this scripts folder to replace the original util.py in the xpclr package xpclr folder
 ```
 grep '^A' bra_only_phased_gendist.vcf > bra_only_phased_gendist.body
 awk '{print $3"\t"$1"\t"$8"\t"$2"\t"$4"\t"$5}' bra_only_phased_gendist.body > bra_only_snp_cM_xpclr.map
