@@ -138,7 +138,11 @@ done<$1
 
 ```
 Tips: Use the modified _util.py_ in this scripts folder to replace the original _util.py_ in the xpclr package xpclr folder
-
+#### 4. cat all chr together and finalize the selected region
+```
+grep '^A' napa_wild_A* > napa_wild_all.txt
+sed -i 's/napa_wild_A[0-1][0-9]\.txt://g' napa_wild_all.txt
+```
 #### prepare .map file (not used in the analysis)
 ```
 grep '^A' bra_only_phased_gendist.vcf > bra_only_phased_gendist.body
