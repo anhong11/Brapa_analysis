@@ -60,7 +60,18 @@ while read line
 do
 	selscan --xpnsl --vcf ../vcf_group/napa_"$line".vcf --vcf-ref ../vcf_group/wild_"$line".vcf --out napa_wild_$line --threads 14
 done<$1
+```
+#### 4. Add chr in each windows outputs, and finalize the selected region
+```
+sh add_chr_cat_windoes.sh chr.name
 
+```
+And the add_chr_cat_windoes.sh:
+```
+while read line
+do
+	sed "s/^/$line\t/" napa_wild_"$line".xpnsl.out.norm.100kb.windows >> napa_wild_all_norm.100kb.windows
+done<$1
 ```
 Tips: header for norm --bp-win output is:
 ```
