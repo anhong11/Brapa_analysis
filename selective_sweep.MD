@@ -146,7 +146,7 @@ sed -i 's/napa_wild_A[0-1][0-9]\.txt://g' napa_wild_all.txt
 Caculate the number of top 5% of the select-detect regions: num="wc -l napa_wild_all.txt", and then num*0.05
 ```
 sort -k13,13nr napa_wild_all.txt | head -n 742 - | sort -k2,2 -k3,3n > napa_wild_all_norm_select.txt
-
+perl merge_xpclr_region.pl napa_wild_all_norm_select.txt napa_wild_all_norm_select_merged.txt
 ```
 #### prepare .map file (not used in the analysis)
 ```
