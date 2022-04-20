@@ -65,6 +65,9 @@ done<$1
 ```
 sh add_chr_cat_windoes.sh chr.name
 
+#top 1% regions of the highest "fraction of XP-nSL scores >2" are defined as selected regions: num="wc -l napa_wild_all_norm.100kb.windows"; num*0.01
+sort -k5,5nr napa_wild_all_norm.100kb.windows | head -n 30 - | sort -k1,1 -k2,2n - > napa_wild_all_norm.100kb.selected.windows
+
 ```
 And the add_chr_cat_windoes.sh:
 ```
