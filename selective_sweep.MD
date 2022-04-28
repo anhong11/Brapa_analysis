@@ -156,7 +156,7 @@ perl merge_xpclr_region.pl napa_wild_all_norm_select.txt napa_wild_all_norm_sele
 
 ### Combine the results of two methods
 ```
-grep '^A' napa_wild_all_norm.100kb.selected.merged.windows | cat napa_wild_all_norm_select_merged.txt - | sort -k1,1 -k2,2n - > napa_wild_combined.txt
+grep '^A' napa_wild* | cat - | sort -k1,1 -k2,2n - | sed 's/napa.*://g' - > napa_wild_combined.txt
 
 ```
 #### prepare .map file (not used in the analysis)
