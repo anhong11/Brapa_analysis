@@ -153,6 +153,12 @@ Caculate the number of top 5% of the select-detect regions: num="wc -l napa_wild
 sort -k13,13nr napa_wild_all.txt | head -n 742 - | sort -k2,2 -k3,3n > napa_wild_all_norm_select.txt
 perl merge_xpclr_region.pl napa_wild_all_norm_select.txt napa_wild_all_norm_select_merged.txt
 ```
+
+### Combine the results of two methods
+```
+grep '^A' napa_wild_all_norm.100kb.selected.merged.windows | cat napa_wild_all_norm_select_merged.txt - | sort -k1,1 -k2,2n - > napa_wild_combined.txt
+
+```
 #### prepare .map file (not used in the analysis)
 ```
 grep '^A' bra_only_phased_gendist.vcf > bra_only_phased_gendist.body
