@@ -48,18 +48,19 @@ euro_tn
 and match brown.txt, ca_tn.txt ... files which contain accession id
 #### 3. Run xpnsl and norm xpnsl results in selscan
 ```
-sbatch -n 14 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="sh xpnsl_napa.sh ../chr.name"
-
-norm --xpnsl --files napa_wild_A01.xpnsl.out napa_wild_A02.xpnsl.out napa_wild_A03.xpnsl.out napa_wild_A04.xpnsl.out napa_wild_A05.xpnsl.out napa_wild_A06.xpnsl.out napa_wild_A07.xpnsl.out napa_wild_A08.xpnsl.out napa_wild_A09.xpnsl.out napa_wild_A10.xpnsl.out
-
-norm --xpnsl --files napa_wild_A01.xpnsl.out napa_wild_A02.xpnsl.out napa_wild_A03.xpnsl.out napa_wild_A04.xpnsl.out napa_wild_A05.xpnsl.out napa_wild_A06.xpnsl.out napa_wild_A07.xpnsl.out napa_wild_A08.xpnsl.out napa_wild_A09.xpnsl.out napa_wild_A10.xpnsl.out --bp-win
+sbatch -n 8 --mem 64G -t 1-00:00 -p Lewis,BioCompute --wrap="sh xpnsl_napa.sh ../chr.name"
 ```
 And the xpnsl_napa.sh:
 ```
 while read line
 do
-	selscan --xpnsl --vcf ../vcf_group/napa_"$line".vcf --vcf-ref ../vcf_group/wild_"$line".vcf --out napa_wild_$line --threads 14
+	selscan --xpnsl --vcf ../vcf_group/napa_"$line".vcf --vcf-ref ../vcf_group/wild_"$line".vcf --out napa_wild_$line --threads 8
 done<$1
+
+norm --xpnsl --files napa_wild_A01.xpnsl.out napa_wild_A02.xpnsl.out napa_wild_A03.xpnsl.out napa_wild_A04.xpnsl.out napa_wild_A05.xpnsl.out napa_wild_A06.xpnsl.out napa_wild_A07.xpnsl.out napa_wild_A08.xpnsl.out napa_wild_A09.xpnsl.out napa_wild_A10.xpnsl.out --bp-win
+
+mkdir napa
+mv napa_wild* napa
 ```
 #### 4. Add chr in each windows outputs, and finalize the selected region
 ```
@@ -141,6 +142,8 @@ do
 	mv ~/napa_wild_"$line".txt /home/hongan/htc/hongan_htc/bra_resequence/ten_cover/3_selective/xpclr/ 
 done<$1
 
+mkdir napa
+mv napa*txt napa/
 ```
 Tips: Use the modified _util.py_ in this scripts folder to replace the original _util.py_ in the xpclr package xpclr folder
 #### 4. cat all chr together and finalize the selected region
