@@ -156,7 +156,10 @@ perl merge_xpclr_region.pl napa_wild_all_norm_select.txt napa_wild_all_norm_sele
 
 ### Combine the results of two methods
 ```
+grep 'gene' Brapa_genome_v3.0_genes.gff3 | awk '{print $1"\t"$4"\t"$5"\t"$9}' - | sed 's/ID=\(B.*\);Na.*/\1/g' > Bra_geneloc.txt
+
 grep '^A' napa_wild* | cat - | sort -k1,1 -k2,2n - | sed 's/napa.*://g' - > napa_wild_combined.txt
+
 
 ```
 #### prepare .map file (not used in the analysis)
