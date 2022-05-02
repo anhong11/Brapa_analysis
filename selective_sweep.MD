@@ -50,7 +50,7 @@ and match brown.txt, ca_tn.txt ... files which contain accession id
 ```
 sbatch -n 8 --mem 64G -t 1-00:00 -p Lewis,BioCompute --wrap="sh xpnsl_napa.sh ../chr.name"
 ```
-And the xpnsl_napa.sh:
+And the _xpnsl_napa.sh_:
 ```
 while read line
 do
@@ -140,7 +140,7 @@ sbatch -n 1 --mem 16G -t 2:00:00 --wrap="sed -i 's/\.\t\PASS\t\([0-9]\+\)\t/\1\t
 sbatch -n 12 --mem 96G -t 12:00:00 -p Lewis,BioCompute --wrap="sh xpclr_napa.sh ../chr.name"
 
 ```
-and the xpclr_napa.sh:
+and the _xpclr_napa.sh_:
 ```
 while read line
 do
