@@ -62,21 +62,27 @@ norm --xpnsl --files napa_wild_A01.xpnsl.out napa_wild_A02.xpnsl.out napa_wild_A
 mkdir napa
 mv napa_wild* napa
 ```
+Then, do the other groups in the same way.   
 #### 4. Add chr in each windows outputs, and finalize the selected region
 ```
-sh add_chr_cat_windoes.sh chr.name
+sh after_xpnsl_merge.sh folder.name
 
-#top 1% regions of the highest "fraction of XP-nSL scores >2" are defined as selected regions: num="wc -l napa_wild_all_norm.100kb.windows"; num*0.01
-sort -k5,5nr napa_wild_all_norm.100kb.windows | head -n 30 - | sort -k1,1 -k2,2n - > napa_wild_all_norm.100kb.selected.windows
-
-perl merge_xpnsl_region.pl napa_wild_all_norm.100kb.selected.windows napa_wild_all_norm.100kb.selected.merged.windows
+#top 1% regions of the highest "fraction of XP-nSL scores >2" are defined as selected regions: num="wc -l napa_wild_all_norm.100kb.windows"; num*0.01; decide "head -n 30"
 
 ```
-And the add_chr_cat_windoes.sh:
+And the _after_xpnsl_merge.sh_:
 ```
 while read line
 do
-	sed "s/^/$line\t/" napa_wild_"$line".xpnsl.out.norm.100kb.windows >> napa_wild_all_norm.100kb.windows
+	cd $line
+	for chr in A01 A02 A03 A04 A05 A06 A07 A08 A09 A10
+	do
+		sed "s/^/$chr\t/" "$line"_wild_"$chr".xpnsl.out.norm.100kb.windows >> "$line"_wild_all_norm.100kb.windows
+	done
+	
+	sort -k5,5nr "$line"_wild_all_norm.100kb.windows | head -n 30 - | sort -k1,1 -k2,2n - > "$line"_wild_all_norm.100kb.selected.windows
+	perl ../merge_xpnsl_region.pl "$line"_wild_all_norm.100kb.selected.windows "$line"_wild_all_norm.100kb.selected.merged.windows
+	cd ..
 done<$1
 ```
 Tips: header for norm --bp-win output is:
@@ -145,16 +151,25 @@ done<$1
 mkdir napa
 mv napa*txt napa/
 ```
+Then, do the other groups in the same way.   
 Tips: Use the modified _util.py_ in this scripts folder to replace the original _util.py_ in the xpclr package xpclr folder
 #### 4. cat all chr together and finalize the selected region
 ```
-grep '^A' napa_wild_A* > napa_wild_all.txt
-sed -i 's/[a-z].*_wild_A[0-1][0-9]\.txt://g' napa_wild_all.txt
+sh after_xpclr_merge.sh folder.name
+
+#Caculate the number of top 5% of the select-detect regions: num="wc -l napa_wild_all.txt", and then num*0.05; decide "head -n 742"
 ```
-Caculate the number of top 5% of the select-detect regions: num="wc -l napa_wild_all.txt", and then num*0.05
+And the _after_xpclr_merge.sh_:
 ```
-sort -k13,13nr napa_wild_all.txt | head -n 742 - | sort -k2,2 -k3,3n > napa_wild_all_norm_select.txt
-perl merge_xpclr_region.pl napa_wild_all_norm_select.txt napa_wild_all_norm_select_merged.txt
+while read line
+do
+	cd $line
+	grep '^A' "$line"_wild_A* > "$line"_wild_all.txt
+	sed -i 's/[a-z].*_wild_A[0-1][0-9]\.txt://g' "$line"_wild_all.txt
+	sort -k13,13nr "$line"_wild_all.txt | head -n 742 - | sort -k2,2 -k3,3n > "$line"_wild_all_norm_select.txt
+	perl ../merge_xpclr_region.pl "$line"_wild_all_norm_select.txt "$line"_wild_all_norm_select_merged.txt
+	cd ..
+done<$1
 ```
 
 ### Combine the results of two methods
