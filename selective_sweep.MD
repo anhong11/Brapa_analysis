@@ -176,9 +176,16 @@ done<$1
 ```
 grep 'gene' Brapa_genome_v3.0_genes.gff3 | awk '{print $1"\t"$4"\t"$5"\t"$9}' - | sed 's/ID=\(B.*\);Na.*/\1/g' > Bra_geneloc.txt
 
-grep '^A' napa_wild* | cat - | sort -k1,1 -k2,2n - | sed 's/napa.*://g' - > napa_wild_combined.txt
-
-
+sh combine_getGene.sh folder.name
+```
+And the _combine_getGen.sh_:
+```
+while read line
+do
+	grep '^A' "$line"_wild* | cat - | sed 's/[a-z].*://g' - | sort -k1,1 -k2,2n - > "$line"_wild_combined.txt
+	awk '{print $1"\t"$2"\t"$3"\t"$4}' "$line"_wild_combined.txt > "$line"_wild_combined_fmt.txt
+	perl get_select_gene.pl Bra_geneloc.txt "$line"_wild_combined_fmt.txt "$line"_wild_gene
+done<$1
 ```
 #### prepare .map file (not used in the analysis)
 ```
