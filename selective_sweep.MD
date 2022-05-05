@@ -246,6 +246,20 @@ do
 	done
 done<$1
 ```
+#### Run XPCLR
+```
+sh run_xpclr.sh
+```
+And _run_xpclr.sh_ is:
+```
+while read line
+do
+	for chr in (1..10)
+	do
+		XPCLR -xpclr ./geno_file/"$line"_chrA"$chr".geno ./geno_file/wild_chrA"$chr".geno bra_only_snp_cM_A"$chr".map "$line"_chrA"$chr" -w1 0.005 100 1000 $chr p1 0.7
+	done
+done<$1
+```
 ## Two new software: [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
 1. install RAiSD
 ```
