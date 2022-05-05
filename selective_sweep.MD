@@ -248,16 +248,19 @@ done<$1
 ```
 #### Run XPCLR
 ```
-sh run_xpclr.sh
+sh run_xpclr.sh cultivar.name  ###cultivar.name is the same group.name, but delete the line "wild"
 ```
 And _run_xpclr.sh_ is:
 ```
 while read line
 do
-	for chr in (1..10)
+	for chr in A01 A02 A03 A04 A05 A06 A07 A08 A09 A10
 	do
-		XPCLR -xpclr ./geno_file/"$line"_chrA"$chr".geno ./geno_file/wild_chrA"$chr".geno bra_only_snp_cM_A"$chr".map "$line"_chrA"$chr" -w1 0.005 100 1000 $chr p1 0.7
+		let num=$num+1
+		XPCLR -xpclr ./geno_file/"$line"_chr"$chr".geno ./geno_file/wild_chr"$chr".geno bra_only_snp_cM_"$chr".map "$line"_wild_chr"$chr" -w1 0.005 100 1000 $num p1 0.7
 	done
+	mkdir $line
+	mv "$line"_wild_ch* $line
 done<$1
 ```
 ## Two new software: [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
