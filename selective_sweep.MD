@@ -192,6 +192,59 @@ done<$1
 grep '^A' bra_only_phased_gendist.vcf > bra_only_phased_gendist.body
 awk '{print $3"\t"$1"\t"$8"\t"$2"\t"$4"\t"$5}' bra_only_phased_gendist.body > bra_only_snp_cM_xpclr.map
 sed -i 's/gen_dist=//g' bra_only_snp_cM_xpclr.map
+sh get_chr_map.sh chr.name
+```
+And _get_chr_map.sh_ is:
+```
+while read line
+do
+	grep "$line" bra_only_snp_cM_xpclr.map > bra_only_snp_cM_"$line".map
+done<$1
+```
+#### prepare .geno file
+```
+sh get_chr_vcf.sh chr.name
+sh get_group_vcf.sh chr.name
+sh get_geno_xpclr.sh group.name
+```
+And _get_chr_vcf.sh_ is:
+```
+while read line
+do
+	grep "$line" bra_only_phased.vcf | cat bra_only_phased.header - > bra_only_phased_chr"$line".vcf
+done<$1
+```
+And _get_group_vcf.sh_ is:
+```
+while read line
+do
+	vcftools --vcf bra_only_phased_chr"$line".vcf --keep ca_tn.txt --recode --out ca_tn_phased_chr"$line"
+	vcftools --vcf bra_only_phased_chr"$line".vcf --keep euro_tn.txt --recode --out euro_tn_phased_chr"$line"
+	vcftools --vcf bra_only_phased_chr"$line".vcf --keep feral.txt --recode --out feral_phased_chr"$line"
+	vcftools --vcf bra_only_phased_chr"$line".vcf --keep grelos.txt --recode --out grelos_phased_chr"$line"
+	vcftools --vcf bra_only_phased_chr"$line".vcf --keep jp_leaf.txt --recode --out jp_leaf_phased_chr"$line"
+	vcftools --vcf bra_only_phased_chr"$line".vcf --keep jp_tn.txt --recode --out jp_tn_phased_chr"$line"
+	vcftools --vcf bra_only_phased_chr"$line".vcf --keep me_tn.txt --recode --out me_tn_phased_chr"$line"
+	vcftools --vcf bra_only_phased_chr"$line".vcf --keep napa.txt --recode --out napa_phased_chr"$line"
+	vcftools --vcf bra_only_phased_chr"$line".vcf --keep pakchoi.txt --recode --out pakchoi_phased_chr"$line"
+	vcftools --vcf bra_only_phased_chr"$line".vcf --keep rapini.txt --recode --out rapini_phased_chr"$line"
+	vcftools --vcf bra_only_phased_chr"$line".vcf --keep wild.txt --recode --out wild_phased_chr"$line"
+done<$1
+```
+And _get_geno_xpclr.sh_ is:
+```
+while read line
+do
+	for chr in A01 A02 A03 A04 A05 A06 A07 A08 A09 A10
+	do
+		awk '{if($0!~/^#/){for(i=10;i<=NF;i++) printf $i"\t"FS;print ""}}' "$line"_phased_chr"$chr".vcf > "$line"_chr"$chr".tmp1
+		sed 's/\t / /g' "$line"_chr"$chr".tmp1 > "$line"_chr"$chr".tmp2
+		sed 's/ $//g' "$line"_chr"$chr".tmp2 > "$line"_chr"$chr".tmp3
+		sed 's/\./9/g' "$line"_chr"$chr".tmp3 > "$line"_chr"$chr".tmp4
+		sed 's/|/ /g' "$line"_chr"$chr".tmp4 > "$line"_chr"$chr".geno
+		rm "$line"_chr"$chr".tmp*
+	done
+done<$1
 ```
 ## Two new software: [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
 1. install RAiSD
