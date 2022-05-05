@@ -168,7 +168,7 @@ do
 	sed -i 's/[a-z].*_wild_A[0-1][0-9]\.txt://g' "$line"_wild_all.txt
 	sort -k12,12nr "$line"_wild_all.txt | head -n 742 | awk '{if($12>0) print}' - | sort -k2,2 -k3,3n > "$line"_wild_all_score_select.txt
 	#sort -k13,13nr "$line"_wild_all.txt | sed '/\t0\t0\t/d' - | head -n 742 - | sort -k2,2 -k3,3n > "$line"_wild_all_norm_select.txt
-	perl ../merge_xpclr_region.pl "$line"_wild_all_norm_select.txt "$line"_wild_all_norm_select_merged.txt
+	perl ../merge_xpclr_region.pl "$line"_wild_all_score_select.txt "$line"_wild_all_score_select_merged.txt
 	cd ..
 done<$1
 ```
