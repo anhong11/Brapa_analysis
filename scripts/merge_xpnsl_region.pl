@@ -43,4 +43,4 @@ while(<IN>){
 }
 
 
-system(`sed -i 's/B.*/CHR\tStart\tEnd\tSize\txpclr\tnorm_xpclr\tSource/g' $ARGV[1]`)
+system(`sed -i 's/B.*/CHR\tStart\tEnd\tSize\tScore\tFraction\tSource/g' $ARGV[1]`)
