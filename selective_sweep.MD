@@ -166,7 +166,8 @@ do
 	cd $line
 	grep '^A' "$line"_wild_A* > "$line"_wild_all.txt
 	sed -i 's/[a-z].*_wild_A[0-1][0-9]\.txt://g' "$line"_wild_all.txt
-	sort -k13,13nr "$line"_wild_all.txt | head -n 742 - | sort -k2,2 -k3,3n > "$line"_wild_all_norm_select.txt
+	sort -k13,13nr "$line"_wild_all.txt | head -n 742 - | sed '/\t0\t0\t/d' - | sort -k2,2 -k3,3n > "$line"_wild_all_norm_select.txt
+	#sort -k13,13nr "$line"_wild_all.txt | head -n 742 - | sort -k2,2 -k3,3n > "$line"_wild_all_norm_select.txt
 	perl ../merge_xpclr_region.pl "$line"_wild_all_norm_select.txt "$line"_wild_all_norm_select_merged.txt
 	cd ..
 done<$1
