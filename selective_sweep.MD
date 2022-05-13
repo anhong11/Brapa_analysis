@@ -263,10 +263,10 @@ do
 		if [$chr == 10];
 		then
 			XPCLR -xpclr ./geno_file/"$line"_chrA"$chr".geno ./geno_file/wild_chrA"$chr".geno bra_only_snp_cM_A"$chr".map "$line"_wild_chrA"$chr" -w1 0.005 100 1000 $chr p1 0.7
-			sed -i 's/^/A/g' "$line"_wild_chrA"$chr".txt
+			sed -i 's/^/A/g' "$line"_wild_chrA"$chr".xpclr.txt
 		else
 			XPCLR -xpclr ./geno_file/"$line"_chrA0"$chr".geno ./geno_file/wild_chrA0"$chr".geno bra_only_snp_cM_A0"$chr".map "$line"_wild_chrA0"$chr" -w1 0.005 100 1000 $chr p1 0.7
-			sed -i 's/^/A0/g' "$line"_wild_chrA0"$chr".txt
+			sed -i 's/^/A0/g' "$line"_wild_chrA0"$chr".xpclr.txt
 		fi
 	done
 	mkdir $line
