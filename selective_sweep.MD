@@ -258,14 +258,21 @@ And _run_xpclr.sh_ is:
 ```
 while read line
 do
-	for chr in A01 A02 A03 A04 A05 A06 A07 A08 A09 A10
+	for chr in 2 3 4 5 6 7 8 10
 	do
-		let num=$num+1
-		XPCLR -xpclr ./geno_file/"$line"_chr"$chr".geno ./geno_file/wild_chr"$chr".geno bra_only_snp_cM_"$chr".map "$line"_wild_chr"$chr" -w1 0.005 100 1000 $num p1 0.7
+		if [$chr == 10];
+		then
+			XPCLR -xpclr ./geno_file/"$line"_chrA"$chr".geno ./geno_file/wild_chrA"$chr".geno bra_only_snp_cM_A"$chr".map "$line"_wild_chrA"$chr" -w1 0.005 100 1000 $chr p1 0.7
+			sed -i 's/^/A/g' "$line"_wild_chrA"$chr".txt
+		else
+			XPCLR -xpclr ./geno_file/"$line"_chrA0"$chr".geno ./geno_file/wild_chrA0"$chr".geno bra_only_snp_cM_A0"$chr".map "$line"_wild_chrA0"$chr" -w1 0.005 100 1000 $chr p1 0.7
+			sed -i 's/^/A/g' "$line"_wild_chrA0"$chr".txt
+		fi
 	done
 	mkdir $line
 	mv "$line"_wild_ch* $line
 done<$1
+
 ```
 ## Two new software: [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
 1. install RAiSD
