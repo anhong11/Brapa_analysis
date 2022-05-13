@@ -260,7 +260,7 @@ while read line
 do
 	for chr in 2 3 4 5 6 7 8 10
 	do
-		if [$chr == 10];
+		if [ $chr == 10 ];
 		then
 			XPCLR -xpclr ./geno_file/"$line"_chrA"$chr".geno ./geno_file/wild_chrA"$chr".geno bra_only_snp_cM_A"$chr".map "$line"_wild_chrA"$chr" -w1 0.005 100 1000 $chr p1 0.7
 			sed -i 's/^/A/g' "$line"_wild_chrA"$chr".xpclr.txt
