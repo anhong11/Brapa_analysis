@@ -266,7 +266,7 @@ do
 			sed -i 's/^/A/g' "$line"_wild_chrA"$chr".txt
 		else
 			XPCLR -xpclr ./geno_file/"$line"_chrA0"$chr".geno ./geno_file/wild_chrA0"$chr".geno bra_only_snp_cM_A0"$chr".map "$line"_wild_chrA0"$chr" -w1 0.005 100 1000 $chr p1 0.7
-			sed -i 's/^/A/g' "$line"_wild_chrA0"$chr".txt
+			sed -i 's/^/A0/g' "$line"_wild_chrA0"$chr".txt
 		fi
 	done
 	mkdir $line
