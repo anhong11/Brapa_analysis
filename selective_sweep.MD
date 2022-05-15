@@ -270,7 +270,19 @@ do
 	mkdir $line
 	mv "$line"_wild_ch* $line
 done<$1
+```
 
+
+```
+while read line
+do
+	cd $line
+	for chr in A01 A02 A03 A04 A05 A06 A07 A08 A09 A10
+	do
+		cat "$line"_wild_chr"$chr".xpclr.txt >> "$line"_wild_allchr.xpclr.txt
+	done
+	cd ..
+done<$1
 ```
 ## Two new software: [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
 1. install RAiSD
