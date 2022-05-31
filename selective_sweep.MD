@@ -292,6 +292,7 @@ while read line
 do
 	cd $line
 	perl ../merge_xp_clr_region.pl -i "$line"_wild_allchr.xpclr.txt -o $line
+	perl ../refmt_XPCLR_selected_region.pl "$line".XP-CLR.selected_region "$line".XP-CLR.selected_region_fmt
 	cd ..
 done<$1
 ```
