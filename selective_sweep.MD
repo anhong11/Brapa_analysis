@@ -253,6 +253,8 @@ done<$1
 #### Run XPCLR
 ```
 sh run_xpclr.sh cultivar.name  ###cultivar.name is the same group.name, but delete the line "wild"
+sh merge_chr.sh cultivar.name
+sh merge_xpclr_region.sh cultivar.name
 ```
 And _run_xpclr.sh_ is:
 ```
@@ -271,7 +273,7 @@ do
 	mv "$line"_wild_ch* $line
 done<$1
 ```
-
+ _merge_chr.sh_ is:
 
 ```
 while read line
@@ -284,6 +286,16 @@ do
 	cd ..
 done<$1
 ```
+_merge_xpclr_region.sh_ is:
+```
+while read line
+do
+	cd $line
+	perl ../merge_xp_clr_region.pl -i "$line"_wild_allchr.xpclr.txt -o $line
+	cd ..
+done<$1
+```
+
 ## Two new software: [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
 1. install RAiSD
 ```
