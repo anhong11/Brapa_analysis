@@ -183,7 +183,7 @@ And the _combine_getGen.sh_:
 ```
 while read line
 do
-	grep '^A' "$line"_wild* | cat - | sed 's/[a-z].*://g' - | sort -k1,1 -k2,2n - > "$line"_wild_combined.txt
+	grep '^A' "$line"* | cat - | sed 's/[a-z].*://g' - | sort -k1,1 -k2,2n - > "$line"_wild_combined.txt
 	awk '{print $1"\t"$2"\t"$3"\t"$4}' "$line"_wild_combined.txt > "$line"_wild_combined_fmt.txt
 	perl merge_combined.pl "$line"_wild_combined_fmt.txt "$line"_wild_combined_fmt_merge.txt
 	perl get_select_gene.pl Bra_geneloc.txt "$line"_wild_combined_fmt_merge.txt "$line"_wild_gene
