@@ -254,7 +254,7 @@ done<$1
 ```
 sh run_xpclr.sh cultivar.name  ###cultivar.name is the same group.name, but delete the line "wild"
 sh merge_chr.sh cultivar.name
-sh merge_xpclr_region.sh cultivar.name
+sh merge_xpclr_region.sh cultivar.name   ###Here we choose top 3% as the selected region
 ```
 And _run_xpclr.sh_ is:
 ```
@@ -291,7 +291,7 @@ _merge_xpclr_region.sh_ is:
 while read line
 do
 	cd $line
-	perl ../merge_xp_clr_region.pl -i "$line"_wild_allchr.xpclr.txt -o $line
+	perl ../merge_xp_clr_region_top3.pl -i "$line"_wild_allchr.xpclr.txt -o $line
 	perl ../refmt_XPCLR_selected_region.pl "$line".XP-CLR.selected_region "$line".XP-CLR.selected_region_fmt
 	cd ..
 done<$1
