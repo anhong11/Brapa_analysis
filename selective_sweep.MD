@@ -92,7 +92,7 @@ Tips: header for norm --bp-win output is:
 and "frac scores gt threshold" means "the fraction of XP-nSL scores >2"
 
 ### Run XPCLR (need to run for each chr)
-#### add gen_dist to QUAL of vcf file (not the best way to prepare .map, but already did it for xpclr)
+#### 1. Add gen_dist to QUAL of vcf file (not the best way to prepare .map, but already did it for xpclr)
 ```
 grep "^#" bra_only_phased.vcf > bra_only_phased.head
 grep "^A" bra_only_phased.vcf > bra_only_phased.body
@@ -131,7 +131,7 @@ bcftools annotate -a fake_gendist.bcf -c INFO bra_only_phased.bcf > bra_only_pha
 sbatch -n 1 --mem 16G -t 2:00:00 --wrap=" sed -i 's/\.\t\PASS\t\([0-9]\+\.[0-9]\+\)\t/\1\t\PASS\t.\t/g' bra_only_phased_gendist.vcf"
 sbatch -n 1 --mem 16G -t 2:00:00 --wrap="sed -i 's/\.\t\PASS\t\([0-9]\+\)\t/\1\t\PASS\t.\t/g' bra_only_phased_gendist.vcf"
 ```
-#### prepare .map file
+#### 2. Prepare .map file
 ```
 grep '^A' bra_only_phased_gendist.vcf > bra_only_phased_gendist.body
 awk '{print $3"\t"$1"\t"$8"\t"$2"\t"$4"\t"$5}' bra_only_phased_gendist.body > bra_only_snp_cM_xpclr.map
@@ -145,7 +145,7 @@ do
 	grep "$line" bra_only_snp_cM_xpclr.map > bra_only_snp_cM_"$line".map
 done<$1
 ```
-#### prepare .geno file
+#### 3. Prepare .geno file
 ```
 sh get_chr_vcf.sh chr.name
 sh get_group_vcf.sh chr.name
@@ -190,7 +190,7 @@ do
 	done
 done<$1
 ```
-#### Run XPCLR
+#### 4. Run XPCLR
 ```
 sh run_xpclr.sh cultivar.name  ###cultivar.name is the same group.name, but delete the line "wild"
 sh merge_chr.sh cultivar.name
