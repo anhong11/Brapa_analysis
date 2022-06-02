@@ -24,7 +24,7 @@ perl get_snp_cm_beagle.pl bra_merged_cM_snp_sort.txt bra_only_beagle.map
 sbatch -n 12 --mem 96G -t 2-00:00 -p Lewis,BioCompute --wrap="java -Xmx90G -jar beagle.25Mar22.4f6.jar gt=brapa_onlySRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.vcf out=bra_only_phased map=bra_only_beagle.map nthreads=12"
 ``` 
 
-## Use cross population methods [selscan](https://github.com/szpiech/selscan)(XP-nSL) and [xpclr](https://github.com/hardingnj/xpclr) detect selective sweep 
+## Use cross population methods [selscan](https://github.com/szpiech/selscan)(XP-nSL) and [XPCLR](https://github.com/anhong11/Brapa_analysis/blob/main/scripts/XPCLR.zip) detect selective sweep 
 
 ### Run selscan (need to run for each chr)
 #### 1. Split phased vcf in each chr
@@ -130,7 +130,6 @@ bcftools annotate -a fake_gendist.bcf -c INFO bra_only_phased.bcf > bra_only_pha
 # Transfere cM from INFO to QUAL column:
 sbatch -n 1 --mem 16G -t 2:00:00 --wrap=" sed -i 's/\.\t\PASS\t\([0-9]\+\.[0-9]\+\)\t/\1\t\PASS\t.\t/g' bra_only_phased_gendist.vcf"
 sbatch -n 1 --mem 16G -t 2:00:00 --wrap="sed -i 's/\.\t\PASS\t\([0-9]\+\)\t/\1\t\PASS\t.\t/g' bra_only_phased_gendist.vcf"
-
 ```
 #### prepare .map file
 ```
@@ -237,7 +236,6 @@ do
 	cd ..
 done<$1
 ```
-
 ### Combine the results of two methods
 ```
 grep 'gene' Brapa_genome_v3.0_genes.gff3 | awk '{print $1"\t"$4"\t"$5"\t"$9}' - | sed 's/ID=\(B.*\);Na.*/\1/g' > Bra_geneloc.txt
@@ -266,31 +264,4 @@ while read line
 do
 	perl annot_ath.pl Bra2Ath_use.txt "$line"_wild_gene "$line"_wild_gene_annot
 done<$1
-```
-
-## Two new software: [RAiSD](https://github.com/alachins/raisd) and [LASSI-Plus](https://github.com/szpiech/lassip)
-1. install RAiSD
-```
-wget https://github.com/alachins/raisd/archive/master.zip
-unzip master.zip
-
-cd raisd-master
-
-module load gcc
-module load gsl
-
-sh install-RAiSD.sh
-```
-2. download LASSI-Plus
-```
-git clone https://github.com/szpiech/lassip
-##then it is ready to use
-```
-
-```
-module load gcc
-lassip 
-
-module load gsl
-RAiSD
 ```
