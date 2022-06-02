@@ -90,12 +90,9 @@ Tips: header for norm --bp-win output is:
 <win start> <win end> <# scores in win> <frac scores gt threshold> <frac scores lt threshold> <approx percentile for gt threshold wins> <approx percentile for lt threshold wins> <max score> <min score>
 ```
 and "frac scores gt threshold" means "the fraction of XP-nSL scores >2"
-### Run xpclr (need to run for each chr)
-#### 1. install xpclr via conda
-```
-conda install xpclr -c bioconda
-```
-#### 2. add gen_dist to QUAL of vcf file
+
+### Run XPCLR (need to run for each chr)
+#### add gen_dist to QUAL of vcf file (not the best way to prepare .map, but already did it for xpclr)
 ```
 grep "^#" bra_only_phased.vcf > bra_only_phased.head
 grep "^A" bra_only_phased.vcf > bra_only_phased.body
@@ -108,7 +105,7 @@ sed -i 's/$/\tGT\t0|0/g' fake_vcf_gendist.txt
 
 # Add chr infomation and modify bra_only_phased.head, only keep one sample in #CHR line, and save as fake_gendist.head
 #chr info:
-	#contig=<ID=A01,length=29595527>
+	##contig=<ID=A01,length=29595527>
 	##contig=<ID=A02,length=31442979>
 	##contig=<ID=A03,length=38154160>
 	##contig=<ID=A04,length=21928416>
@@ -135,63 +132,7 @@ sbatch -n 1 --mem 16G -t 2:00:00 --wrap=" sed -i 's/\.\t\PASS\t\([0-9]\+\.[0-9]\
 sbatch -n 1 --mem 16G -t 2:00:00 --wrap="sed -i 's/\.\t\PASS\t\([0-9]\+\)\t/\1\t\PASS\t.\t/g' bra_only_phased_gendist.vcf"
 
 ```
-#### 3. run xpclr
-```
-sbatch -n 12 --mem 96G -t 12:00:00 -p Lewis,BioCompute --wrap="sh xpclr_napa.sh ../chr.name"
-
-```
-and the _xpclr_napa.sh_:
-```
-while read line
-do
-	xpclr -Sa ../napa.txt -Sb ../wild.txt -C $line -I ../bra_only_phased_gendist2.vcf -O ~/napa_wild_"$line".txt --phased --gdistkey QUAL
-	mv ~/napa_wild_"$line".txt /home/hongan/htc/hongan_htc/bra_resequence/ten_cover/3_selective/xpclr/ 
-done<$1
-
-mkdir napa
-mv napa*txt napa/
-```
-Then, do the other groups in the same way.   
-Tips: Use the modified _util.py_ in this scripts folder to replace the original _util.py_ in the xpclr package xpclr folder
-#### 4. cat all chr together and finalize the selected region
-```
-sh after_xpclr_merge.sh folder.name
-
-#Caculate the number of top 5% of the select-detect regions: num="wc -l napa_wild_all.txt", and then num*0.05; decide "head -n 742"
-```
-And the _after_xpclr_merge.sh_:
-```
-while read line
-do
-	cd $line
-	grep '^A' "$line"_wild_A* > "$line"_wild_all.txt
-	sed -i 's/[a-z].*_wild_A[0-1][0-9]\.txt://g' "$line"_wild_all.txt
-	sort -k12,12nr "$line"_wild_all.txt | head -n 742 | awk '{if($12>0) print}' - | sort -k2,2 -k3,3n > "$line"_wild_all_score_select.txt
-	#sort -k13,13nr "$line"_wild_all.txt | sed '/\t0\t0\t/d' - | head -n 742 - | sort -k2,2 -k3,3n > "$line"_wild_all_norm_select.txt
-	perl ../merge_xpclr_region.pl "$line"_wild_all_score_select.txt "$line"_wild_all_score_select_merged.txt
-	cd ..
-done<$1
-```
-
-### Combine the results of two methods
-```
-grep 'gene' Brapa_genome_v3.0_genes.gff3 | awk '{print $1"\t"$4"\t"$5"\t"$9}' - | sed 's/ID=\(B.*\);Na.*/\1/g' > Bra_geneloc.txt
-
-sh combine_getGene.sh folder.name
-```
-And the _combine_getGen.sh_:
-```
-while read line
-do
-	grep '^A' "$line"* | cat - | sed 's/[a-z].*://g' - | sort -k1,1 -k2,2n - > "$line"_wild_combined.txt
-	awk '{print $1"\t"$2"\t"$3"\t"$4}' "$line"_wild_combined.txt > "$line"_wild_combined_fmt.txt
-	perl merge_combined.pl "$line"_wild_combined_fmt.txt "$line"_wild_combined_fmt_merge.txt
-	perl get_select_gene.pl Bra_geneloc.txt "$line"_wild_combined_fmt_merge.txt "$line"_wild_gene
-	mkdir $line
-	mv "$line"_wild* $line
-done<$1
-```
-#### prepare .map file (not used in the analysis)
+#### prepare .map file
 ```
 grep '^A' bra_only_phased_gendist.vcf > bra_only_phased_gendist.body
 awk '{print $3"\t"$1"\t"$8"\t"$2"\t"$4"\t"$5}' bra_only_phased_gendist.body > bra_only_snp_cM_xpclr.map
@@ -294,6 +235,36 @@ do
 	perl ../merge_xp_clr_region_top3.pl -i "$line"_wild_allchr.xpclr.txt -o $line
 	perl ../refmt_XPCLR_selected_region.pl "$line".XP-CLR.selected_region "$line".XP-CLR.selected_region_fmt
 	cd ..
+done<$1
+```
+
+### Combine the results of two methods
+```
+grep 'gene' Brapa_genome_v3.0_genes.gff3 | awk '{print $1"\t"$4"\t"$5"\t"$9}' - | sed 's/ID=\(B.*\);Na.*/\1/g' > Bra_geneloc.txt
+
+sh combine_getGene.sh folder.name
+```
+And the _combine_getGen.sh_:
+```
+while read line
+do
+	grep '^A' "$line"* | cat - | sed 's/[a-z].*://g' - | sort -k1,1 -k2,2n - > "$line"_wild_combined.txt
+	awk '{print $1"\t"$2"\t"$3"\t"$4}' "$line"_wild_combined.txt > "$line"_wild_combined_fmt.txt
+	perl merge_combined.pl "$line"_wild_combined_fmt.txt "$line"_wild_combined_fmt_merge.txt
+	perl get_select_gene.pl Bra_geneloc.txt "$line"_wild_combined_fmt_merge.txt "$line"_wild_gene
+	mkdir $line
+	mv "$line"_wild* $line
+done<$1
+```
+### Annotate the selected gene
+```
+sh add_annot.sh group.name
+```
+And the _add_annot.sh_ is:
+```
+while read line
+do
+	perl annot_ath.pl Bra2Ath_use.txt "$line"_wild_gene "$line"_wild_gene_annot
 done<$1
 ```
 
