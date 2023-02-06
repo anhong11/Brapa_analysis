@@ -23,6 +23,9 @@ sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_
 
 ##if have invariant sites, iqtree will report the error and creat a phylip file that only has variant site. Rerun iqtree with this new phylip file
 sbatch -n 14 --mem 196G -t 2-00:00 -p Lewis,BioCompute --wrap="iqtree2 -s brapa_outgrpSRA_gatk.vcfutils.DP10MQ30.g0.1m0.05.snphylo.fasta.varsites.phy -m GTR+G+ASC -o Bo025A,Bo080A -nt AUTO -ntmax 14 -B 1000 -st DNA"
+
+sbatch -n 14 --mem 450G -t 7-00:00 --qos biolong -p Lewis,BioCompute --wrap="iqtree2 -s brapa_bna_out_gatk.vcfutils.DP10MQ30.g0.1m0.05.snp.phy.varsites.phy -m GTR+G+ASC -o Bo025A,Bo080A -nt AUTO -ntmax 14 -B 1000 -st DNA"
+
 ```
 ## Run [raxml](https://cme.h-its.org/exelixis/web/software/raxml/) if the dataset is not very big
 
